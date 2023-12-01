@@ -116,12 +116,10 @@ const Login = () => {
                   ""
                 )}
               </div>
-              <div onClick={() => navigate("/otp")} className=" float-right my-3 cursor-pointer text-main">
-                Forgot Password?
-              </div>
+
               <button
                 type="submit"
-                className={`inputs bg-main text-[#000] font-semibold w-full rounded-md text-center py-2 px-2 mt-2 mb-4 cursor-pointer ${
+                className={`inputs bg-main text-[#000] mt-5 font-semibold w-full rounded-md text-center py-2 px-2  mb-4 cursor-pointer ${
                   isSubmitting ? "opacity-[0.5]" : ""
                 }`}
                 disabled={isSubmitting}

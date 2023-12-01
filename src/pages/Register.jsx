@@ -148,14 +148,10 @@ const Register = () => {
                 )}
               </div>
 
-              <button onClick={() => navigate("/otp")} className="text-end  float-right my-3 text-black dark:text-main">
-                Forgot Password?
-              </button>
-
               <button
                 type="submit"
                 value="Register"
-                className="inputs bg-[#ffdd95] text-black w-full rounded-md py-2 px-2 mt-2 mb-4 cursor-pointer"
+                className="inputs bg-[#ffdd95] text-black w-full rounded-md py-2 px-2 mt-5 mb-4 cursor-pointer"
               >
                 Register
               </button>
