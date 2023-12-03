@@ -43,7 +43,6 @@ export const putData = async (url, put, token) => {
     const { data } = await axios.put(`${BASE_URL}/${url}`, put, {
       headers: {
         Authorization: ` Bearer ${token}`,
-        "Content-Type": "multipart/form-data",
       },
     });
     return data;

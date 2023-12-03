@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import { AiFillLike, AiOutlineComment, AiOutlineLike } from "react-icons/ai";
 import { RiSendPlaneFill } from "react-icons/ri";
@@ -9,7 +10,7 @@ import en from "javascript-time-ago/locale/en";
 import { BsThreeDots, BsThreeDotsVertical } from "react-icons/bs";
 import { deleteData } from "../utils/api.js";
 
-const RepliesCard = ({ item, getComments }) => {
+const RepliesCard = ({ item, getComments, ID }) => {
   const [showReply, setShowReply] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
@@ -46,10 +47,10 @@ const RepliesCard = ({ item, getComments }) => {
       reply,
     };
     await postData("/createReply", formData, token);
-    getReplies();
     setReply("");
     setLoading(false);
     getComments();
+    getReplies();
   };
 
   const patchLike = async (replyId) => {
@@ -110,7 +111,7 @@ const RepliesCard = ({ item, getComments }) => {
                           <div className="image self-start h-8 w-8">
                             <img
                               className="w-full h-full object-cover rounded-full"
-                              src={`${import.meta.env.VITE_APP_USER_URL}/${item?.replyBy?.avatar}`}
+                              src={item?.replyBy?.avatar}
                               alt=""
                             />
                           </div>
@@ -118,7 +119,7 @@ const RepliesCard = ({ item, getComments }) => {
                             <div className="flex w-full items-center gap-2 justify-between">
                               <p
                                 className={`text-xs mb-1 hover:opacity-[1] cursor-pointer opacity-[.8] ${
-                                  item?.replyBy?._id === user._id
+                                  item?.replyBy?._id === ID
                                     ? "dark:bg-perfectDarkBg bg-gray-300 px-2  rounded-full"
                                     : ""
                                 } `}

@@ -2,22 +2,26 @@ import { AiFillFileImage, AiOutlinePaperClip } from "react-icons/ai";
 import BaseLine from "./BaseLine";
 import { useState } from "react";
 import { FaVideo, FaXmark } from "react-icons/fa6";
-import { useFormik } from "formik";
 import { postData } from "../utils/api";
 import { useDispatch, useSelector } from "react-redux";
 import { ThreeDotsLoader } from "./Loader";
 import { setUser } from "../store/authSlice";
 
+import storage from "../utils/fireBaseConfig";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+
 const MyPostCard = ({ data, getFeedPost }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
+  const [dec, setDec] = useState("");
+  const [progress, setProgress] = useState(0);
+  const [file, setFile] = useState(null);
 
   const { token } = useSelector((state) => state.auth);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    setFieldValue("image", file);
+    setFile(file);
     const reader = new FileReader();
     reader.onload = (event) => {
       setImagePreview(event.target.result);
@@ -25,52 +29,63 @@ const MyPostCard = ({ data, getFeedPost }) => {
     reader.readAsDataURL(file);
   };
 
-  const initialValues = {
-    description: "",
-  };
-
-  const submitForm = async (values, { resetForm }) => {
-    setImagePreview(null);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setLoading(true);
-    const formData = new FormData();
-    for (let value in values) {
-      formData.append(value, values[value]);
-    }
-    const res = await postData("createPost", formData, token);
-    alert(res?.msg);
-    resetForm();
-    setLoading(false);
-    dispatch(setUser(res.user));
-    getFeedPost();
-  };
+    setImagePreview(null);
 
-  const { handleBlur, handleChange, values, handleSubmit, setFieldValue } = useFormik({
-    initialValues,
-    onSubmit: submitForm,
-  });
+    try {
+      const storageRef = ref(storage, `posts/${Date.now()}-${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        },
+        (error) => {
+          console.log(error.message);
+        },
+        async () => {
+          try {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+            const formData = {
+              description: dec,
+              url: downloadURL,
+            };
+
+            const res = await postData("createPost", formData, token);
+            alert(res?.msg);
+            setLoading(false);
+            getFeedPost();
+          } catch (error) {
+            console.log(error.message);
+            setLoading(false);
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error.message);
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col">
       <>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={(e) => handleSubmit(e)}>
           <div className="flex  gap-2 items-center">
             <div className="userImage h-12 w-12">
-              <img
-                className="h-full w-full object-cover rounded-full"
-                src={`${import.meta.env.VITE_APP_USER_URL}/${data?.avatar}`}
-                alt=""
-              />
+              <img className="h-full w-full object-cover rounded-full" src={data?.avatar} alt="" />
             </div>
 
             <div className="input w-full">
               <input
                 type="text"
                 placeholder="Create Post..."
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.description}
-                name="description"
-                id="description"
+                onChange={(e) => setDec(e.target.value)}
+                value={dec}
                 className="w-full py-3 px-2 rounded-xl bg-lightWhite dark:text-white dark:bg-lightGray"
               />
             </div>
@@ -116,7 +131,8 @@ const MyPostCard = ({ data, getFeedPost }) => {
               <input type="file" className="hidden" onChange={handleImageChange} id="post" name="post" />
             </div>
           ) : (
-            <div className="text-center flex justify-center items-center">
+            <div className="text-center flex flex-col gap-3 justify-center items-center">
+              <div className="progress opacity-[.7]">Upload is {progress}% done</div>
               <ThreeDotsLoader />
             </div>
           )}

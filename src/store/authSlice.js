@@ -33,7 +33,7 @@ const authSlice = createSlice({
     },
     updatePosts: (state, action) => {
       state.posts = state.posts.map((item) => {
-        return item._id === action.payload._id ? (item = action.payload) : item;
+        return item._id === action.payload._id ? { ...item, ...action.payload } : item;
       });
     },
   },

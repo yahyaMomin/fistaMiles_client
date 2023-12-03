@@ -23,7 +23,7 @@ const Home = () => {
 
   const getFeedPost = async () => {
     const res = await GetData(`feedPosts?pageNum=${pageNum}`, token);
-    dispatch(setPosts(res));
+    dispatch(setPosts(res.posts));
   };
 
   const nextPageData = async () => {
@@ -31,7 +31,7 @@ const Home = () => {
     setLoading(true);
     const res = await GetData(`feedPosts?pageNum=${nextPageNum}`, token);
     if (res.length) {
-      dispatch(setPosts([...posts, ...res]));
+      dispatch(setPosts([...posts, ...res.posts]));
       setLoading(false);
       setPageNum(nextPageNum);
     } else {
@@ -70,9 +70,7 @@ const Home = () => {
               <MyPostCard getFeedPost={getFeedPost} data={user} />
             </div>
             <div className="">
-              {posts?.map((item) => (
-                <PostsCard getFeedPost={getFeedPost} key={item?._id} data={item} />
-              ))}
+              <PostsCard getFeedPost={getFeedPost} data={posts} />
               {!loading ? (
                 <>
                   {posts?.length >= 50 ? (

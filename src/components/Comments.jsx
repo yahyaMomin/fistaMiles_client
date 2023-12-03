@@ -7,11 +7,13 @@ import { PatchData, deleteData } from "../utils/api";
 import { LoaderSpinner, ThreeDotsLoader } from "./Loader";
 import RepliesCard from "./RepliesCard";
 import { BsThreeDots, BsThreeDotsVertical } from "react-icons/bs";
+import { useParams } from "react-router-dom";
 
-const Comments = ({ item, getComments }) => {
+const Comments = ({ item, getComments, post }) => {
   const { user } = useSelector((state) => state.auth);
   const { token } = useSelector((state) => state.auth);
   const [data, setData] = useState(null);
+  const { id } = useParams();
   const [showDelete, setShowDelete] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showMsg, setShowMsg] = useState(false);
@@ -33,13 +35,13 @@ const Comments = ({ item, getComments }) => {
       commentId,
     };
     await PatchData(`/likeComment`, formData, token);
-    getComments();
+    getComments("", post._id);
   };
 
   const DeleteComment = async (id) => {
     setLoading(true);
     await deleteData(`deleteComment/${id}`, token);
-    getComments();
+    getComments("", post._id);
     setLoading(false);
     showTextMsg();
   };
@@ -61,19 +63,13 @@ const Comments = ({ item, getComments }) => {
                 <div className="mb-5" key={item?._id}>
                   <div className="flex w-full  items-center gap-2">
                     <div className="image self-start h-8 w-8">
-                      <img
-                        className="w-full h-full object-cover rounded-full"
-                        src={`${import.meta.env.VITE_APP_USER_URL}/${item?.commentedBy?.avatar}`}
-                        alt=""
-                      />
+                      <img className="w-full h-full object-cover rounded-full" src={item?.commentedBy?.avatar} alt="" />
                     </div>
                     <div className="flex flex-col ">
                       <div className="flex gap-3">
                         <p
                           className={`text-xs mb-1 hover:opacity-[1] cursor-pointer opacity-[.8] ${
-                            item?.commentedBy?._id === user._id
-                              ? "dark:bg-perfectDarkBg bg-gray-300 px-2 rounded-full"
-                              : ""
+                            item?.commentedBy?._id === id ? "dark:bg-perfectDarkBg bg-gray-300 px-2 rounded-full" : ""
                           }`}
                         >
                           {item?.commentedBy?.userName}
@@ -118,7 +114,7 @@ const Comments = ({ item, getComments }) => {
                             <span className="text-sm opacity-[.8]">{item?.likes.length}</span>
                           ) : undefined}
                         </p>
-                        <RepliesCard getComments={getComments} item={item} />
+                        <RepliesCard ID={id} getComments={getComments} item={item} />
                       </div>
                     </div>
                   </div>

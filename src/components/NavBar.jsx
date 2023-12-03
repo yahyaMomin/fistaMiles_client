@@ -8,11 +8,14 @@ import { GetData } from "../utils/api";
 import { ThreeDotsLoader } from "./Loader";
 
 const NavBar = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { user, token } = useSelector((state) => state.auth);
+
   const [inputVal, setInputVal] = useState("");
   const [data, setData] = useState(null);
-  const dispatch = useDispatch();
-  const { user, token } = useSelector((state) => state.auth);
-  const navigate = useNavigate();
+  const [dropDown, setDropDown] = useState(false);
 
   const handleChange = async (e) => {
     setData(null);
@@ -22,9 +25,6 @@ const NavBar = () => {
     setData(res);
   };
 
-  const BASE_URL = import.meta.env.VITE_APP_USER_URL;
-
-  const [dropDown, setDropDown] = useState(false);
   return (
     <div className="navbar overflow-visible  w-full z-30">
       <div className="flex  w-full  dark:bg-darkGray border dark:border-none gap-2 bg-[#fafafa] py-2 mt-2 rounded-sm px-1   md:px-3  justify-between items-center ">
@@ -50,11 +50,7 @@ const NavBar = () => {
                     <div key={data?._id} className="flex mb-3 px-4 justify-start items-center gap-5">
                       <div className="avatar">
                         <div className="h-10 w-10 relative rounded-full">
-                          <img
-                            className="h-full w-full object-cover rounded-full"
-                            src={`${BASE_URL}/${data?.avatar}`}
-                            alt="user"
-                          />
+                          <img className="h-full w-full object-cover rounded-full" src={data?.avatar} alt="user" />
                         </div>
                       </div>
                       <div
@@ -88,11 +84,7 @@ const NavBar = () => {
             name="user"
             id="user"
           >
-            <img
-              className="h-full w-full object-cover rounded-full"
-              src={`${BASE_URL}/${user.avatar}`}
-              alt="user profile"
-            />
+            <img className="h-full w-full object-cover rounded-full" src={user.avatar} alt="user profile" />
             {dropDown && (
               <ul className="z-40 top-[130%] bg-lightWhite py-3 rounded-md w-[100px] dark:bg-lightGray absolute right-[10%]">
                 <li

@@ -10,6 +10,8 @@ import { putData } from "../utils/api";
 import { useDispatch } from "react-redux";
 import { setToken, setUser } from "../store/authSlice";
 import { useNavigate } from "react-router-dom";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import storage from "../utils/fireBaseConfig";
 
 const UpdateProfile = () => {
   const user = useSelector((state) => state.auth.user);
@@ -18,6 +20,7 @@ const UpdateProfile = () => {
   const [msg, setMsg] = useState(null);
   const [preview, setPreview] = useState("");
   const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -33,39 +36,63 @@ const UpdateProfile = () => {
   };
 
   const schema = yup.object().shape({
-    fullName: yup.string().required("required").max(11),
-    userName: yup.string().required("required").max(11),
+    fullName: yup.string().required("required").max(20),
+    userName: yup.string().required("required").max(20),
   });
 
   const imageChange = (event) => {
     const file = event.target.files[0];
+    setFile(file);
     const reader = new FileReader();
     reader.onload = (event) => {
       setPreview(event.target.result);
       console.log(event);
     };
     reader.readAsDataURL(file);
-    setFieldValue("avatar", file);
   };
 
   const submitForm = async (values, { resetForm }) => {
-    console.log(values);
     setLoading(true);
-    const formData = new FormData();
+    try {
+      if (file) {
+        const storageRef = ref(storage, `users/${Date.now()}-${file.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
 
-    for (let value in values) {
-      formData.append(value, values[value]);
+        uploadTask.on("state_changed", async () => {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+          const formData = {
+            ...values,
+            url: downloadURL,
+          };
+
+          const data = await putData("/updateProfile", formData, token);
+          setMsg(data?.msg);
+          dispatch(setUser(data?.user));
+          dispatch(setToken(data?.token));
+          setPreview("");
+          setLoading(false);
+          resetForm();
+          setTimeout(() => {
+            navigate("/");
+          }, 1000);
+        });
+      } else {
+        const data = await putData("/updateProfile", values, token);
+        setMsg(data?.msg);
+        dispatch(setUser(data?.user));
+        dispatch(setToken(data?.token));
+        setPreview("");
+        setLoading(false);
+        resetForm();
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error.message);
     }
-    const data = await putData("/updateProfile", formData, token);
-    setMsg(data?.msg);
-    dispatch(setUser(data?.user));
-    dispatch(setToken(data?.token));
-    setPreview("");
-    setLoading(false);
-    resetForm();
-    setTimeout(() => {
-      navigate("/");
-    }, 1000);
   };
 
   const { errors, handleBlur, handleChange, values, touched, handleSubmit, setFieldValue } = useFormik({
@@ -95,11 +122,7 @@ const UpdateProfile = () => {
                   <label htmlFor="image" className="text-sm">
                     <span className="opacity-[.7]">PROFILE IMAGE</span>
                     <div className="img h-14 w-14 cursor-pointer rounded-full ">
-                      <img
-                        src={`${import.meta.env.VITE_APP_USER_URL}/${user.avatar}`}
-                        className="rounded-full h-full w-full object-cover"
-                        alt="user image"
-                      />
+                      <img src={user?.avatar} className="rounded-full h-full w-full object-cover" alt="user image" />
                     </div>
                   </label>
                   <input id="image" name="image" type="file" onChange={imageChange} className="hidden" />

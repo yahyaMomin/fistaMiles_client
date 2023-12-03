@@ -1,7 +1,7 @@
+/* eslint-disable react/prop-types */
 import BaseLine from "./BaseLine";
-import { FaLocationDot, FaXTwitter, FaLinkedin, FaBagShopping, FaAddressCard } from "react-icons/fa6";
+import { FaLocationDot, FaXTwitter, FaLinkedin, FaBagShopping } from "react-icons/fa6";
 import { BiSolidEdit } from "react-icons/bi";
-import { useState } from "react";
 import { BsInstagram } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import TimeAgo from "javascript-time-ago";
@@ -21,12 +21,10 @@ const UserCard = ({ getUser, data, isProfile }) => {
 
   const followHandle = async (id) => {
     const res = await PatchData(`/follow/${id}`, { id }, token);
-    console.log(res);
     getUser();
     dispatch(setUser(res?.user));
   };
 
-  const USER_URL = import.meta.env.VITE_APP_USER_URL;
   return (
     <>
       {data && (
@@ -34,11 +32,7 @@ const UserCard = ({ getUser, data, isProfile }) => {
           <div className="flex justify-between gap-2 items-center">
             <div className="flex gap-2">
               <div className="img h-12 w-12 ">
-                <img
-                  className="h-full w-full cursor-pointer rounded-full object-cover"
-                  src={`${USER_URL}/${data?.avatar}`}
-                  alt="user"
-                />
+                <img className="h-full w-full cursor-pointer rounded-full object-cover" src={data?.avatar} alt="user" />
               </div>
 
               <div className="flex  justify-center gap-1 flex-col">
@@ -108,17 +102,13 @@ const UserCard = ({ getUser, data, isProfile }) => {
             <div className="flex justify-between items-center">
               <div className="flex  gap-1 items-center">
                 <FaLocationDot />
-                {data?.location && data?.location === "undefined" ? <p>{data?.location}</p> : <p>no location</p>}
+                {data?.location ? <p>{data?.location}</p> : <p>no location</p>}
               </div>
             </div>
             <div className="flex justify-between items-center">
               <div className="flex gap-1 items-center">
                 <FaBagShopping />
-                {data?.profession && data?.profession === "undefined" ? (
-                  <p>{data?.profession}</p>
-                ) : (
-                  <p>no profession</p>
-                )}
+                {data?.profession ? <p>{data?.profession}</p> : <p>no profession</p>}
               </div>
             </div>
           </div>
@@ -135,7 +125,7 @@ const UserCard = ({ getUser, data, isProfile }) => {
             <div className="flex justify-between items-center">
               <div className="flex items-center  gap-2">
                 <BsInstagram />
-                {data?.instagram && data?.instagram !== "undefined" ? (
+                {data?.instagram ? (
                   <a className="text-blue-400" href={data?.instagram}>
                     go to instagram profile
                   </a>
@@ -148,7 +138,7 @@ const UserCard = ({ getUser, data, isProfile }) => {
             <div className="flex justify-between">
               <div className="flex items-center  gap-2">
                 <FaXTwitter />
-                {data?.twitter && data?.twitter !== "undefined" ? (
+                {data?.twitter ? (
                   <a className="text-blue-400" href={data?.twitter}>
                     go to twitter profile
                   </a>
@@ -161,7 +151,7 @@ const UserCard = ({ getUser, data, isProfile }) => {
             <div className="flex justify-between">
               <div className="flex items-center  gap-2">
                 <FaLinkedin />
-                {data?.linkedin && data?.linkedin !== "undefined" ? (
+                {data?.linkedin ? (
                   <a className="text-blue-400" href={data?.linkedin}>
                     go to linkedIn profile
                   </a>

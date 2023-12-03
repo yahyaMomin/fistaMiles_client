@@ -11,7 +11,7 @@ import SuggestionCard from "../components/SuggestionCard";
 
 const Profile = () => {
   const [data, setData] = useState(null);
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState(null);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("posts");
 
@@ -23,13 +23,13 @@ const Profile = () => {
   const [pageNum, setPageNum] = useState(1);
 
   const getUser = async () => {
-    const user = await GetData(`getUser/${id}`, token);
-    setData(user);
+    const res = await GetData(`getUser/${id}`, token);
+    setData(res.user);
   };
   const getUserPosts = async () => {
     setLoading(true);
-    const posts = await GetData(`posts/${id}`, token);
-    setPosts(posts);
+    const res = await GetData(`posts/${id}`, token);
+    setPosts(res.posts);
     setLoading(false);
   };
   useEffect(() => {
@@ -42,7 +42,7 @@ const Profile = () => {
     setLoading(true);
     const res = await GetData(`posts/${id}?page=${nextPageNum}`, token);
     if (res.length) {
-      setPosts([...posts, ...res]);
+      setPosts([...posts, ...res.posts]);
       setLoading(false);
       setPageNum(nextPageNum);
     } else {
@@ -72,9 +72,7 @@ const Profile = () => {
             <UserCard getUser={getUser} data={data} isProfile={true} />
           </div>
           <div className=" myPost flex flex-col h-screen md:overflow-scroll  gap-2 basis-[60%] lg:basis-[42%]">
-            {posts?.map((item) => (
-              <PostsCard getFeedPost={getUserPosts} key={item?._id} data={item} />
-            ))}
+            {posts && <PostsCard getFeedPost={getUserPosts} data={posts} />}
             {!loading ? (
               <>
                 {posts?.length >= 50 ? (
