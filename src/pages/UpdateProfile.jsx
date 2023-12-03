@@ -21,6 +21,7 @@ const UpdateProfile = () => {
   const [preview, setPreview] = useState("");
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState("");
+  const [progress, setProgress] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -37,7 +38,11 @@ const UpdateProfile = () => {
 
   const schema = yup.object().shape({
     fullName: yup.string().required("required").max(20),
-    userName: yup.string().required("required").max(20),
+    userName: yup
+      .string()
+      .required("required")
+      .max(20)
+      .matches(/^\S+$/, "Use underScore '_' instead of empty space or it"),
   });
 
   const imageChange = (event) => {
@@ -46,7 +51,6 @@ const UpdateProfile = () => {
     const reader = new FileReader();
     reader.onload = (event) => {
       setPreview(event.target.result);
-      console.log(event);
     };
     reader.readAsDataURL(file);
   };
@@ -58,25 +62,38 @@ const UpdateProfile = () => {
         const storageRef = ref(storage, `users/${Date.now()}-${file.name}`);
         const uploadTask = uploadBytesResumable(storageRef, file);
 
-        uploadTask.on("state_changed", async () => {
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            setProgress(Math.floor((snapshot.bytesTransferred / snapshot.totalBytes) * 100));
+          },
+          (error) => {
+            console.log(error.message);
+          },
+          async () => {
+            try {
+              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
 
-          const formData = {
-            ...values,
-            url: downloadURL,
-          };
+              const formData = {
+                ...values,
+                url: downloadURL,
+              };
 
-          const data = await putData("/updateProfile", formData, token);
-          setMsg(data?.msg);
-          dispatch(setUser(data?.user));
-          dispatch(setToken(data?.token));
-          setPreview("");
-          setLoading(false);
-          resetForm();
-          setTimeout(() => {
-            navigate("/");
-          }, 1000);
-        });
+              const data = await putData("/updateProfile", formData, token);
+              setMsg(data?.msg);
+              dispatch(setUser(data?.user));
+              dispatch(setToken(data?.token));
+              setPreview("");
+              setLoading(false);
+              resetForm();
+              setTimeout(() => {
+                navigate("/");
+              }, 1000);
+            } catch (error) {
+              console.log(error.message);
+            }
+          }
+        );
       } else {
         const data = await putData("/updateProfile", values, token);
         setMsg(data?.msg);

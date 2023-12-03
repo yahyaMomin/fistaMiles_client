@@ -3,9 +3,8 @@ import BaseLine from "./BaseLine";
 import { useState } from "react";
 import { FaVideo, FaXmark } from "react-icons/fa6";
 import { postData } from "../utils/api";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { ThreeDotsLoader } from "./Loader";
-import { setUser } from "../store/authSlice";
 
 import storage from "../utils/fireBaseConfig";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
@@ -41,7 +40,7 @@ const MyPostCard = ({ data, getFeedPost }) => {
       uploadTask.on(
         "state_changed",
         (snapshot) => {
-          setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+          setProgress(Math.floor((snapshot.bytesTransferred / snapshot.totalBytes) * 100));
         },
         (error) => {
           console.log(error.message);
@@ -56,6 +55,7 @@ const MyPostCard = ({ data, getFeedPost }) => {
             };
 
             const res = await postData("createPost", formData, token);
+            setDec("");
             alert(res?.msg);
             setLoading(false);
             getFeedPost();

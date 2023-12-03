@@ -7,18 +7,23 @@ import { postData } from "../utils/api";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { LoaderSpinner } from "../components/Loader";
+import { useDispatch } from "react-redux";
+import { setToken, setUser } from "../store/authSlice";
 
 const Register = () => {
   const navigate = useNavigate();
   const [eye, setEye] = useState(true);
   const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
+
   const Toggle = () => {
     setEye(!eye);
   };
 
   const schema = yup.object().shape({
-    fullName: yup.string().required("required").max(11),
-    userName: yup.string().required("required").max(11),
+    fullName: yup.string().required("required").max(20),
+    userName: yup.string().required("required").max(20),
     email: yup.string().email("invalid email").required("required"),
     password: yup.string().min(6).required("required"),
   });
@@ -32,10 +37,11 @@ const Register = () => {
 
   const formSubmit = async (values, action) => {
     setLoading(true);
-    await postData("register", values);
+    const res = await postData("register", values);
+    dispatch(setToken(res.token));
+    dispatch(setUser(res.user));
     action.resetForm();
     setLoading(false);
-    navigate("/login");
   };
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({

@@ -29,7 +29,8 @@ const PostDetail = ({ data, user, token, getFeedPost }) => {
     setShowToggle(!showToggle);
     const res = await deleteData(`deletePost/${id}`, token);
     setLoading(false);
-    dispatch(setUser(res.user));
+    getFeedPost();
+
     alert(res.msg);
   };
 

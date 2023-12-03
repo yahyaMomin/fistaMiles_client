@@ -14,15 +14,15 @@ const NavBar = () => {
   const { user, token } = useSelector((state) => state.auth);
 
   const [inputVal, setInputVal] = useState("");
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [dropDown, setDropDown] = useState(false);
 
   const handleChange = async (e) => {
-    setData(null);
+    setData([]);
     setInputVal(e.target.value);
     if (inputVal.length <= 1) return;
     const res = await GetData(`search/${inputVal}`, token);
-    setData(res);
+    setData(res.users);
   };
 
   return (

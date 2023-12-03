@@ -12,7 +12,7 @@ import { useParams } from "react-router-dom";
 const Comments = ({ item, getComments, post }) => {
   const { user } = useSelector((state) => state.auth);
   const { token } = useSelector((state) => state.auth);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const { id } = useParams();
   const [showDelete, setShowDelete] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -114,7 +114,7 @@ const Comments = ({ item, getComments, post }) => {
                             <span className="text-sm opacity-[.8]">{item?.likes.length}</span>
                           ) : undefined}
                         </p>
-                        <RepliesCard ID={id} getComments={getComments} item={item} />
+                        <RepliesCard ID={id} getComments={getComments} item={item} post={post} />
                       </div>
                     </div>
                   </div>

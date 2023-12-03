@@ -50,7 +50,13 @@ const PostsCard = ({ getFeedPost, data }) => {
 
                   <PostImage patchLike={patchLike} data={data} showAni={showAni} id={ID} />
 
-                  <LikeAndCommentIcon data={data} user={user} token={token} patchLike={patchLike} />
+                  <LikeAndCommentIcon
+                    data={data}
+                    user={user}
+                    token={token}
+                    getFeedPost={getFeedPost}
+                    patchLike={patchLike}
+                  />
                 </div>
               </>
             </div>

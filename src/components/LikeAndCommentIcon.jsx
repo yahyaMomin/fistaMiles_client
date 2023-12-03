@@ -10,11 +10,11 @@ import { RiSendPlaneFill } from "react-icons/ri";
 import { ThreeDotsLoader } from "./Loader";
 import Comments from "./Comments";
 
-const LikeAndCommentIcon = ({ data, user, token, patchLike }) => {
+const LikeAndCommentIcon = ({ data, user, token, patchLike, getFeedPost }) => {
   const [showComment, setShowComment] = useState(false);
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
-  const [loading, setLoading] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("newest");
 
   const getComments = async (e, id) => {
@@ -33,7 +33,8 @@ const LikeAndCommentIcon = ({ data, user, token, patchLike }) => {
     const res = await postData("createComment", formData, token);
     setComments(res.comments);
     setLoading(false);
-    setComment(null);
+    setComment("");
+    getFeedPost();
   };
 
   const tabChange = (tab) => {

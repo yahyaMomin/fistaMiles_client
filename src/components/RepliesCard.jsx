@@ -10,7 +10,7 @@ import en from "javascript-time-ago/locale/en";
 import { BsThreeDots, BsThreeDotsVertical } from "react-icons/bs";
 import { deleteData } from "../utils/api.js";
 
-const RepliesCard = ({ item, getComments, ID }) => {
+const RepliesCard = ({ item, getComments, ID, post }) => {
   const [showReply, setShowReply] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
@@ -36,7 +36,7 @@ const RepliesCard = ({ item, getComments, ID }) => {
   const deleteReply = async (replyId) => {
     await deleteData(`deleteReply/${replyId}`, token);
     getReplies();
-    getComments();
+    getComments("", post._id);
   };
 
   const sendReply = async (e, commentId) => {
@@ -49,7 +49,7 @@ const RepliesCard = ({ item, getComments, ID }) => {
     await postData("/createReply", formData, token);
     setReply("");
     setLoading(false);
-    getComments();
+    getComments("", post._id);
     getReplies();
   };
 
