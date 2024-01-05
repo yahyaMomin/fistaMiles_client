@@ -1,54 +1,60 @@
-import { useState } from "react";
-import ContentWrapper from "../components/ContentWrapper";
-import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
-import Card from "../components/Card";
-import { postData } from "../utils/api";
-import { useFormik } from "formik";
-import * as yup from "yup";
-import { LoaderSpinner } from "../components/Loader";
-import { useDispatch } from "react-redux";
-import { setToken, setUser } from "../store/authSlice";
+import { useState } from 'react'
+import ContentWrapper from '../components/ContentWrapper'
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
+import { useNavigate } from 'react-router-dom'
+import Card from '../components/Card'
+import { postData } from '../utils/api'
+import { useFormik } from 'formik'
+import * as yup from 'yup'
+import { LoaderSpinner } from '../components/Loader'
+import { useDispatch } from 'react-redux'
+import { setToken, setUser } from '../store/authSlice'
+import notify from '../Toast/Toast'
 
 const Register = () => {
-  const navigate = useNavigate();
-  const [eye, setEye] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
+  const [eye, setEye] = useState(true)
+  const [loading, setLoading] = useState(false)
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const Toggle = () => {
-    setEye(!eye);
-  };
+    setEye(!eye)
+  }
 
   const schema = yup.object().shape({
-    fullName: yup.string().required("required").max(20),
-    userName: yup.string().required("required").max(20),
-    email: yup.string().email("invalid email").required("required"),
-    password: yup.string().min(6).required("required"),
-  });
+    fullName: yup.string().required('required').max(20),
+    userName: yup.string().required('required').max(20),
+    email: yup.string().email('invalid email').required('required'),
+    password: yup.string().min(6).required('required'),
+  })
 
   const initialValues = {
-    fullName: "",
-    userName: "",
-    email: "",
-    password: "",
-  };
+    fullName: '',
+    userName: '',
+    email: '',
+    password: '',
+  }
 
   const formSubmit = async (values, action) => {
-    setLoading(true);
-    const res = await postData("register", values);
-    dispatch(setToken(res.token));
-    dispatch(setUser(res.user));
-    action.resetForm();
-    setLoading(false);
-  };
+    setLoading(true)
+    const res = await postData('register', values)
+    if (res?.status === 'error') {
+      notify('error', res.msg)
+      setLoading(false)
+      return
+    }
+    dispatch(setToken(res.token))
+    dispatch(setUser(res.user))
+    action.resetForm()
+    setLoading(false)
+  }
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
     initialValues,
     validationSchema: schema,
     onSubmit: formSubmit,
-  });
+  })
 
   return (
     <ContentWrapper>
@@ -68,7 +74,7 @@ const Register = () => {
                 onChange={handleChange}
                 value={values.fullName}
                 className={`w-full py-2 px-2 my-1 rounded-md inputs${
-                  errors.fullName && touched.fullName ? "border-2 border-red-400 " : ""
+                  errors.fullName && touched.fullName ? 'border-2 border-red-400 ' : ''
                 }`}
                 type="text"
                 placeholder="Enter Your fullName"
@@ -77,7 +83,7 @@ const Register = () => {
                 {errors.fullName && touched.fullName ? (
                   <small className="errors text-red-400">{errors.fullName}</small>
                 ) : (
-                  ""
+                  ''
                 )}
               </div>
               <label className=" text-xs opacity-[0.5] mt-2 text-white " htmlFor="userName">
@@ -90,7 +96,7 @@ const Register = () => {
                 onChange={handleChange}
                 value={values.userName}
                 className={`w-full py-2 px-2 my-1 rounded-md inputs ${
-                  errors.userName && touched.userName ? "border-red-400 border-2" : ""
+                  errors.userName && touched.userName ? 'border-red-400 border-2' : ''
                 }`}
                 type="text"
                 placeholder="Enter your userName"
@@ -100,7 +106,7 @@ const Register = () => {
                 {errors.userName && touched.userName ? (
                   <small className="errors text-red-400">{errors.userName}</small>
                 ) : (
-                  ""
+                  ''
                 )}
               </div>
               <label className=" text-xs opacity-[0.5] mt-2 text-white " htmlFor="email">
@@ -113,14 +119,14 @@ const Register = () => {
                 onChange={handleChange}
                 value={values.email}
                 className={`w-full py-2 px-2 my-1 rounded-md inputs${
-                  errors.email && touched.email ? "border-red-400 border-spacing-4" : ""
+                  errors.email && touched.email ? 'border-red-400 border-spacing-4' : ''
                 }`}
                 type="email"
                 placeholder="name@gmail.com"
                 required
               />
               <div className="error">
-                {errors.email && touched.email ? <small className="errors text-red-400">{errors.email}</small> : ""}
+                {errors.email && touched.email ? <small className="errors text-red-400">{errors.email}</small> : ''}
               </div>
               <div className="inputPass relative mt-2">
                 <label className=" text-xs opacity-[0.5] text-white " htmlFor="password">
@@ -133,9 +139,9 @@ const Register = () => {
                   onChange={handleChange}
                   value={values.password}
                   className={`w-full py-2 px-2 my-1  rounded-md inputs ${
-                    errors.password && touched.password ? "border-red-400 border-2" : ""
+                    errors.password && touched.password ? 'border-red-400 border-2' : ''
                   } `}
-                  type={eye ? "password" : "text"}
+                  type={eye ? 'password' : 'text'}
                   placeholder="Password"
                   required
                 />
@@ -150,7 +156,7 @@ const Register = () => {
                 {errors.password && touched.password ? (
                   <small className="errors text-red-400 ">{errors.password}</small>
                 ) : (
-                  ""
+                  ''
                 )}
               </div>
 
@@ -164,7 +170,7 @@ const Register = () => {
             </form>
             <p className="text-center">
               Have an Account?
-              <button onClick={() => navigate("/login")} className="dark:text-main text-black  ml-3">
+              <button onClick={() => navigate('/login')} className="dark:text-main text-black  ml-3">
                 Login
               </button>
             </p>
@@ -174,7 +180,7 @@ const Register = () => {
         )}
       </Card>
     </ContentWrapper>
-  );
-};
+  )
+}
 
-export default Register;
+export default Register

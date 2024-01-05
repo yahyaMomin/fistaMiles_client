@@ -1,75 +1,77 @@
-import { AiFillFileImage, AiOutlinePaperClip } from "react-icons/ai";
-import BaseLine from "./BaseLine";
-import { useState } from "react";
-import { FaVideo, FaXmark } from "react-icons/fa6";
-import { postData } from "../utils/api";
-import { useSelector } from "react-redux";
-import { ThreeDotsLoader } from "./Loader";
+import { AiFillFileImage, AiOutlinePaperClip } from 'react-icons/ai'
+import BaseLine from './BaseLine'
+import { useState } from 'react'
+import { FaVideo, FaXmark } from 'react-icons/fa6'
+import { postData } from '../utils/api'
+import { useSelector } from 'react-redux'
+import { ThreeDotsLoader } from './Loader'
 
-import storage from "../utils/fireBaseConfig";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import storage from '../utils/fireBaseConfig'
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
+import notify from '../Toast/Toast'
 
 const MyPostCard = ({ data, getFeedPost }) => {
-  const [imagePreview, setImagePreview] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [dec, setDec] = useState("");
-  const [progress, setProgress] = useState(0);
-  const [file, setFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [dec, setDec] = useState('')
+  const [progress, setProgress] = useState(0)
+  const [file, setFile] = useState(null)
 
-  const { token } = useSelector((state) => state.auth);
+  const { token } = useSelector((state) => state.auth)
 
   const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    setFile(file);
-    const reader = new FileReader();
+    const file = event.target.files[0]
+    setFile(file)
+    const reader = new FileReader()
     reader.onload = (event) => {
-      setImagePreview(event.target.result);
-    };
-    reader.readAsDataURL(file);
-  };
+      setImagePreview(event.target.result)
+    }
+    reader.readAsDataURL(file)
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setImagePreview(null);
+    e.preventDefault()
+    setLoading(true)
+    setImagePreview(null)
 
     try {
-      const storageRef = ref(storage, `posts/${Date.now()}-${file.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, file);
+      const storageRef = ref(storage, `posts/${Date.now()}-${file.name}`)
+      const uploadTask = uploadBytesResumable(storageRef, file)
 
       uploadTask.on(
-        "state_changed",
+        'state_changed',
         (snapshot) => {
-          setProgress(Math.floor((snapshot.bytesTransferred / snapshot.totalBytes) * 100));
+          setProgress(Math.floor((snapshot.bytesTransferred / snapshot.totalBytes) * 100))
         },
         (error) => {
-          console.log(error.message);
+          notify('error', error.message)
         },
         async () => {
           try {
-            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref)
 
             const formData = {
               description: dec,
               url: downloadURL,
-            };
+            }
 
-            const res = await postData("createPost", formData, token);
-            setDec("");
-            alert(res?.msg);
-            setLoading(false);
-            getFeedPost();
+            const res = await postData('createPost', formData, token)
+            setDec('')
+            notify('success', 'new Post Created')
+            setLoading(false)
+            getFeedPost()
           } catch (error) {
-            console.log(error.message);
-            setLoading(false);
+            notify('error', error.message)
+            setLoading(false)
           }
         }
-      );
+      )
     } catch (error) {
-      console.log(error.message);
-      setLoading(false);
+      console.log(error.message)
+      notify('error', error.message)
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="flex flex-col">
@@ -122,7 +124,7 @@ const MyPostCard = ({ data, getFeedPost }) => {
 
               <button
                 type="submit"
-                className="btn disabled:cursor-no-drop bg-main hover:opacity-[.7]  text-black px-3 py-1 rounded-md"
+                className="btn disabled:cursor-no-drop bg-main hover:opacity-[.7]  text-black px-3 py-1 rounded-sm"
                 disabled={imagePreview === null}
               >
                 Post
@@ -152,12 +154,12 @@ const MyPostCard = ({ data, getFeedPost }) => {
               <img className=" max-h-[468px]  h-full w-full rounded-md" src={imagePreview} />
             </div>
           ) : (
-            ""
+            ''
           )}
         </div>
       </>
     </div>
-  );
-};
+  )
+}
 
-export default MyPostCard;
+export default MyPostCard

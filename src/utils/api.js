@@ -1,5 +1,5 @@
-import axios from "axios";
-const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
+import axios from 'axios'
+const BASE_URL = import.meta.env.VITE_APP_BASE_URL
 
 export const GetData = async (url, token) => {
   try {
@@ -7,49 +7,53 @@ export const GetData = async (url, token) => {
       headers: {
         Authorization: ` Bearer ${token}`,
       },
-    });
-    return data;
+    })
+    return data
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
+
 export const postData = async (url, post, token) => {
   try {
     const { data } = await axios.post(`${BASE_URL}/${url}`, post, {
       headers: {
         Authorization: ` Bearer ${token}`,
       },
-    });
-    return data;
+    })
+    return data
   } catch (error) {
-    const { status, data } = error.response;
-    return { status, error: data.msg };
+    const { data } = error.response
+    console.log(data)
+    return data
   }
-};
+}
 export const PatchData = async (url, patch, token) => {
   try {
     const { data } = await axios.patch(`${BASE_URL}/${url}`, patch, {
       headers: {
         Authorization: ` Bearer ${token}`,
       },
-    });
-    return data;
+    })
+    return data
   } catch (error) {
-    console.log(error);
+    const { data } = error.response
+    return data
   }
-};
+}
 export const putData = async (url, put, token) => {
   try {
     const { data } = await axios.put(`${BASE_URL}/${url}`, put, {
       headers: {
         Authorization: ` Bearer ${token}`,
       },
-    });
-    return data;
+    })
+    return data
   } catch (error) {
-    console.log(error);
+    const { data } = error.response
+    return data
   }
-};
+}
 
 export const deleteData = async (url, token) => {
   try {
@@ -57,9 +61,9 @@ export const deleteData = async (url, token) => {
       headers: {
         Authorization: ` Bearer ${token}`,
       },
-    });
-    return data;
+    })
+    return data
   } catch (error) {
-    console.log(error);
+    const { data } = error.response
   }
-};
+}

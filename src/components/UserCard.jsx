@@ -1,29 +1,29 @@
 /* eslint-disable react/prop-types */
-import BaseLine from "./BaseLine";
-import { FaLocationDot, FaXTwitter, FaLinkedin, FaBagShopping } from "react-icons/fa6";
-import { BiSolidEdit } from "react-icons/bi";
-import { BsInstagram } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
-import TimeAgo from "javascript-time-ago";
-import en from "javascript-time-ago/locale/en";
-import { PatchData } from "../utils/api";
-import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../store/authSlice";
+import BaseLine from './BaseLine'
+import { FaLocationDot, FaXTwitter, FaLinkedin, FaBagShopping } from 'react-icons/fa6'
+import { BiSolidEdit } from 'react-icons/bi'
+import { BsInstagram } from 'react-icons/bs'
+import { useNavigate } from 'react-router-dom'
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
+import { PatchData } from '../utils/api'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUser } from '../store/authSlice'
 
 const UserCard = ({ getUser, data, isProfile }) => {
-  const { token, user } = useSelector((state) => state.auth);
+  const { token, user } = useSelector((state) => state.auth)
 
-  TimeAgo.addLocale(en);
-  const timeAgo = new TimeAgo("en-US");
+  TimeAgo.addLocale(en)
+  const timeAgo = new TimeAgo('en-US')
 
-  const Navigate = useNavigate();
-  const dispatch = useDispatch();
+  const Navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const followHandle = async (id) => {
-    const res = await PatchData(`/follow/${id}`, { id }, token);
-    getUser();
-    dispatch(setUser(res?.user));
-  };
+    const res = await PatchData(`/follow/${id}`, { id }, token)
+    getUser()
+    dispatch(setUser(res?.user))
+  }
 
   return (
     <>
@@ -42,14 +42,14 @@ const UserCard = ({ getUser, data, isProfile }) => {
             </div>
 
             {!isProfile || user?._id === data?._id ? (
-              <button onClick={() => Navigate("/updateProfile")}>
+              <button onClick={() => Navigate('/updateProfile')}>
                 <BiSolidEdit />
               </button>
             ) : (
               <button
                 className={` hover:opacity-[.8] w-24   border dark:border-transparent rounded-lg `}
                 onClick={() => {
-                  followHandle(data?._id);
+                  followHandle(data?._id)
                 }}
               >
                 {data?.followers?.includes(user?._id) ? (
@@ -92,7 +92,7 @@ const UserCard = ({ getUser, data, isProfile }) => {
               value={data?.bio}
               disabled
               placeholder="Bio..."
-              className="w-full h-28 text-sm dark:bg-darkGray  dark:border-[#36383b] border-2 p-2 rounded-md "
+              className="w-full h-fit text-sm dark:bg-darkGray  dark:border-[#36383b] border-2 p-2 rounded-md "
             ></textarea>
           </div>
 
@@ -164,7 +164,7 @@ const UserCard = ({ getUser, data, isProfile }) => {
         </div>
       )}
     </>
-  );
-};
+  )
+}
 
-export default UserCard;
+export default UserCard

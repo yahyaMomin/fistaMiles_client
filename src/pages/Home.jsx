@@ -20,9 +20,14 @@ const Home = () => {
   const [show, setShow] = useState("hide");
   const [pageNum, setPageNum] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const getFeedPost = async () => {
     const res = await GetData(`feedPosts?pageNum=${pageNum}`, token);
+    if (res.status === "500") {
+      setError(res?.data?.msg);
+      return;
+    }
     dispatch(setPosts(res.posts));
   };
 
