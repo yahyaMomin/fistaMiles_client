@@ -31,7 +31,7 @@ const App = () => {
           theme="colored"
         />
         <Routes>
-          <Route path="/" element={token ? <Navigate to="/home" /> : <Form />} />
+          <Route path="/" element={!token ? <Form /> : <Navigate to="/home" />} />
           <Route path="/home" element={token ? <Home /> : <Navigate to="/" />} />
           <Route path="/profile/:id" element={token ? <Profile /> : <Navigate to="/" />} />
           <Route path="/updateProfile" element={token ? <UpdateProfile /> : <Navigate to="/" />} />
