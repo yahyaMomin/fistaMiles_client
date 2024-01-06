@@ -5,9 +5,9 @@ import { FaCommentDots } from 'react-icons/fa6'
 import { GetData, postData } from '../utils/api'
 import millify from 'millify'
 import { BsFillShareFill } from 'react-icons/bs'
-import BaseLine from './BaseLine'
+import BaseLine from '../extra/BaseLine'
 import { RiSendPlaneFill } from 'react-icons/ri'
-import { ThreeDotsLoader } from './Loader'
+import { ThreeDotsLoader } from '../extra/Loader'
 import Comments from './Comments'
 
 const LikeAndCommentIcon = ({ data, user, token, patchLike, getFeedPost }) => {

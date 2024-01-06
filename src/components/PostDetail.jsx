@@ -1,52 +1,52 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
-import BaseLine from "./BaseLine";
-import { useNavigate } from "react-router-dom";
-import { BsThreeDots } from "react-icons/bs";
-import { PatchData, deleteData } from "../utils/api";
-import { useDispatch } from "react-redux";
-import { setUser } from "../store/authSlice";
-import TimeAgo from "javascript-time-ago";
-import en from "javascript-time-ago/locale/en";
-import { RiSendPlaneFill } from "react-icons/ri";
-import { ThreeDotsLoader } from "./Loader";
+import { useState } from 'react'
+import BaseLine from '../extra/BaseLine'
+import { useNavigate } from 'react-router-dom'
+import { BsThreeDots } from 'react-icons/bs'
+import { PatchData, deleteData } from '../utils/api'
+import { useDispatch } from 'react-redux'
+import { setUser } from '../store/authSlice'
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
+import { RiSendPlaneFill } from 'react-icons/ri'
+import { ThreeDotsLoader } from '../extra/Loader'
 
 const PostDetail = ({ data, user, token, getFeedPost }) => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
-  TimeAgo.addLocale(en);
-  const timeAgo = new TimeAgo("en-US");
+  TimeAgo.addLocale(en)
+  const timeAgo = new TimeAgo('en-US')
 
-  const [showDesc, setShowDesc] = useState(false);
-  const [id, setId] = useState("");
-  const [showToggle, setShowToggle] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [desc, setDesc] = useState("");
+  const [showDesc, setShowDesc] = useState(false)
+  const [id, setId] = useState('')
+  const [showToggle, setShowToggle] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [desc, setDesc] = useState('')
 
   const deletePost = async (id) => {
-    setLoading(true);
-    setShowToggle(!showToggle);
-    const res = await deleteData(`deletePost/${id}`, token);
-    setLoading(false);
-    getFeedPost();
+    setLoading(true)
+    setShowToggle(!showToggle)
+    const res = await deleteData(`deletePost/${id}`, token)
+    setLoading(false)
+    getFeedPost()
 
-    alert(res.msg);
-  };
+    alert(res.msg)
+  }
 
   const changeDesc = async (e, postId) => {
-    setLoading(true);
-    e.preventDefault();
+    setLoading(true)
+    e.preventDefault()
     const formData = {
       postId,
       description: desc,
-    };
-    await PatchData("updateDescription", formData, token);
-    setDesc("");
-    setShowDesc(false);
-    setLoading(false);
-    getFeedPost();
-  };
+    }
+    await PatchData('updateDescription', formData, token)
+    setDesc('')
+    setShowDesc(false)
+    setLoading(false)
+    getFeedPost()
+  }
 
   return (
     <>
@@ -76,8 +76,8 @@ const PostDetail = ({ data, user, token, getFeedPost }) => {
                   <small
                     className="cursor-pointer"
                     onClick={() => {
-                      setShowToggle(!showToggle);
-                      setId(data?._id);
+                      setShowToggle(!showToggle)
+                      setId(data?._id)
                     }}
                   >
                     <BsThreeDots />
@@ -87,8 +87,8 @@ const PostDetail = ({ data, user, token, getFeedPost }) => {
                   <ul className="absolute top-[50%] right-[100%] z-50 py-1  dark:bg-black  bg-lightWhite text-center  w-20 rounded-md ">
                     <li
                       onClick={() => {
-                        setShowDesc(!showDesc);
-                        setShowToggle(!showToggle);
+                        setShowDesc(!showDesc)
+                        setShowToggle(!showToggle)
                       }}
                       className="hover:dark:bg-white hover:bg-[#cbcdd1] py-1 hover:text-black cursor-pointer "
                     >
@@ -129,7 +129,7 @@ const PostDetail = ({ data, user, token, getFeedPost }) => {
         <ThreeDotsLoader />
       )}
     </>
-  );
-};
+  )
+}
 
-export default PostDetail;
+export default PostDetail

@@ -1,34 +1,34 @@
-import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { setLogOut, setTheme } from "../store/authSlice";
-import Theme from "./Theme";
-import { AiOutlineSearch } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
-import { GetData } from "../utils/api";
-import { ThreeDotsLoader } from "./Loader";
+import { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { setLogOut, setTheme } from '../store/authSlice'
+import Theme from '../extra/Theme'
+import { AiOutlineSearch } from 'react-icons/ai'
+import { useNavigate } from 'react-router-dom'
+import { GetData } from '../utils/api'
+import { ThreeDotsLoader } from '../extra/Loader'
 
 const NavBar = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-  const { user, token } = useSelector((state) => state.auth);
+  const { user, token } = useSelector((state) => state.auth)
 
-  const [inputVal, setInputVal] = useState("");
-  const [data, setData] = useState([]);
-  const [dropDown, setDropDown] = useState(false);
+  const [inputVal, setInputVal] = useState('')
+  const [data, setData] = useState([])
+  const [dropDown, setDropDown] = useState(false)
 
   const handleChange = async (e) => {
-    setData([]);
-    setInputVal(e.target.value);
-    if (inputVal.length <= 1) return;
-    const res = await GetData(`search/${inputVal}`, token);
-    setData(res.users);
-  };
+    setData([])
+    setInputVal(e.target.value)
+    if (inputVal.length <= 1) return
+    const res = await GetData(`search/${inputVal}`, token)
+    setData(res.users)
+  }
 
   return (
     <div className="navbar overflow-visible  w-full z-30">
       <div className="flex  w-full  dark:bg-darkGray border dark:border-none gap-2 bg-[#fafafa] py-2 mt-2 rounded-sm px-1   md:px-3  justify-between items-center ">
-        <h1 onClick={() => navigate("/")} className=" cursor-pointer  hidden md:block  text-base md:text-xl font-mono">
+        <h1 onClick={() => navigate('/')} className=" cursor-pointer  hidden md:block  text-base md:text-xl font-mono">
           Fista<span className="text-yellow-400 dark:text-main ">Miles</span>
         </h1>
         <div className="inputs relative flex justify-center  md:w-[50%] items-center flex-row w-full h-[40px] text-center">
@@ -56,8 +56,8 @@ const NavBar = () => {
                       <div
                         className="userName cursor-pointer"
                         onClick={() => {
-                          navigate(`/profile/${data?._id}`);
-                          setInputVal("");
+                          navigate(`/profile/${data?._id}`)
+                          setInputVal('')
                         }}
                       >
                         <div className="flex flex-col items-start">
@@ -89,7 +89,7 @@ const NavBar = () => {
               <ul className="z-40 top-[130%] bg-lightWhite py-3 rounded-md w-[100px] dark:bg-lightGray absolute right-[10%]">
                 <li
                   className="hover:bg-[#cbcdd1]  mb-1 w-full hover:dark:bg-white  py-1 hover:text-black"
-                  onClick={() => navigate("/")}
+                  onClick={() => navigate('/')}
                 >
                   profile
                 </li>
@@ -112,7 +112,7 @@ const NavBar = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default NavBar;
+export default NavBar

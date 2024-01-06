@@ -1,66 +1,66 @@
-import { useEffect, useState } from "react";
-import { BsFillArrowUpCircleFill } from "react-icons/bs";
+import { useEffect, useState } from 'react'
+import { BsFillArrowUpCircleFill } from 'react-icons/bs'
 
-import { GetData } from "../utils/api";
-import { setPosts } from "../store/authSlice";
+import { GetData } from '../utils/api'
+import { setPosts } from '../store/authSlice'
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux'
 
-import UserCard from "../components/UserCard";
-import PostsCard from "../components/PostsCard";
-import Navbar from "../components/NavBar";
-import MyPostCard from "../components/MyPostCard";
-import SuggestionCard from "../components/SuggestionCard";
-import { ThreeDotsLoader } from "../components/Loader";
+import UserCard from '../cards/UserCard'
+import PostsCard from '../cards/PostsCard'
+import Navbar from '../components/NavBar'
+import MyPostCard from '../cards/MyPostCard'
+import SuggestionCard from '../cards/SuggestionCard'
+import { ThreeDotsLoader } from '../extra/Loader'
 
 const Home = () => {
-  const dispatch = useDispatch();
-  const { user, token, posts } = useSelector((state) => state.auth);
+  const dispatch = useDispatch()
+  const { user, token, posts } = useSelector((state) => state.auth)
 
-  const [show, setShow] = useState("hide");
-  const [pageNum, setPageNum] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [show, setShow] = useState('hide')
+  const [pageNum, setPageNum] = useState(1)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const getFeedPost = async () => {
-    const res = await GetData(`feedPosts?pageNum=${pageNum}`, token);
-    if (res.status === "500") {
-      setError(res?.data?.msg);
-      return;
+    const res = await GetData(`feedPosts?pageNum=${pageNum}`, token)
+    if (res.status === '500') {
+      setError(res?.data?.msg)
+      return
     }
-    dispatch(setPosts(res.posts));
-  };
+    dispatch(setPosts(res.posts))
+  }
 
   const nextPageData = async () => {
-    const nextPageNum = pageNum + 1;
-    setLoading(true);
-    const res = await GetData(`feedPosts?pageNum=${nextPageNum}`, token);
+    const nextPageNum = pageNum + 1
+    setLoading(true)
+    const res = await GetData(`feedPosts?pageNum=${nextPageNum}`, token)
     if (res.length) {
-      dispatch(setPosts([...posts, ...res.posts]));
-      setLoading(false);
-      setPageNum(nextPageNum);
+      dispatch(setPosts([...posts, ...res.posts]))
+      setLoading(false)
+      setPageNum(nextPageNum)
     } else {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    getFeedPost();
-    setPageNum(1);
-  }, []);
+    getFeedPost()
+    setPageNum(1)
+  }, [])
 
   const scrollHandle = () => {
     if (window.scrollY > 900) {
-      setShow("show");
+      setShow('show')
     } else {
-      setShow("hide");
+      setShow('hide')
     }
-  };
+  }
 
   useEffect(() => {
-    window.addEventListener("scroll", scrollHandle);
-    return () => window.removeEventListener("scroll", scrollHandle);
-  }, []);
+    window.addEventListener('scroll', scrollHandle)
+    return () => window.removeEventListener('scroll', scrollHandle)
+  }, [])
 
   return (
     <>
@@ -97,7 +97,7 @@ const Home = () => {
             <SuggestionCard />
           </div>
 
-          {show === "show" && (
+          {show === 'show' && (
             <div
               onClick={() => window.scrollTo(0, 0)}
               className=" fixed text-2xl bottom-[10%] right-[5%] cursor-pointer"
@@ -108,7 +108,7 @@ const Home = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

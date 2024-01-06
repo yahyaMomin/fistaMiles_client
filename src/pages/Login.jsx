@@ -1,14 +1,14 @@
 import { useState } from 'react'
-import ContentWrapper from '../components/ContentWrapper'
+import ContentWrapper from '../wrappers/ContentWrapper'
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
 import { useNavigate } from 'react-router-dom'
-import Card from '../components/Card'
+import Card from '../wrappers/Card'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { postData } from '../utils/api'
 import { useDispatch } from 'react-redux'
-import { setMsg, setToken, setUser } from '../store/authSlice'
-import { LoaderSpinner } from '../components/Loader'
+import { setToken, setUser } from '../store/authSlice'
+import { LoaderSpinner } from '../extra/Loader'
 import notify from '../Toast/Toast'
 
 const Login = () => {
@@ -41,7 +41,6 @@ const Login = () => {
     }
     setLoading(false)
     dispatch(setToken(res.accessToken))
-    dispatch(setMsg(res.msg))
     dispatch(setUser(res.user))
     actions.resetForm()
   }

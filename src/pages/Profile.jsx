@@ -1,67 +1,67 @@
-import UserCard from "../components/UserCard";
-import NavBar from "../components/NavBar";
-import { BsFillArrowUpCircleFill } from "react-icons/bs";
-import { useParams, useLocation } from "react-router-dom";
-import { GetData } from "../utils/api";
-import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import { ThreeDotsLoader } from "../components/Loader";
-import PostsCard from "../components/PostsCard";
-import SuggestionCard from "../components/SuggestionCard";
+import UserCard from '../cards/UserCard'
+import NavBar from '../components/NavBar'
+import { BsFillArrowUpCircleFill } from 'react-icons/bs'
+import { useParams, useLocation } from 'react-router-dom'
+import { GetData } from '../utils/api'
+import { useSelector } from 'react-redux'
+import { useEffect, useState } from 'react'
+import { ThreeDotsLoader } from '../extra/Loader'
+import PostsCard from '../cards/PostsCard'
+import SuggestionCard from '../cards/SuggestionCard'
 
 const Profile = () => {
-  const [data, setData] = useState(null);
-  const [posts, setPosts] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("posts");
+  const [data, setData] = useState(null)
+  const [posts, setPosts] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [activeTab, setActiveTab] = useState('posts')
 
-  const { id } = useParams();
+  const { id } = useParams()
 
-  const { token } = useSelector((state) => state.auth);
+  const { token } = useSelector((state) => state.auth)
 
-  const [show, setShow] = useState("hide");
-  const [pageNum, setPageNum] = useState(1);
+  const [show, setShow] = useState('hide')
+  const [pageNum, setPageNum] = useState(1)
 
   const getUser = async () => {
-    const res = await GetData(`getUser/${id}`, token);
-    setData(res.user);
-  };
+    const res = await GetData(`getUser/${id}`, token)
+    setData(res.user)
+  }
   const getUserPosts = async () => {
-    setLoading(true);
-    const res = await GetData(`posts/${id}`, token);
-    setPosts(res.posts);
-    setLoading(false);
-  };
+    setLoading(true)
+    const res = await GetData(`posts/${id}`, token)
+    setPosts(res.posts)
+    setLoading(false)
+  }
   useEffect(() => {
-    getUser();
-    getUserPosts();
-  }, [id]);
+    getUser()
+    getUserPosts()
+  }, [id])
 
   const nextPageData = async () => {
-    const nextPageNum = pageNum + 1;
-    setLoading(true);
-    const res = await GetData(`posts/${id}?page=${nextPageNum}`, token);
+    const nextPageNum = pageNum + 1
+    setLoading(true)
+    const res = await GetData(`posts/${id}?page=${nextPageNum}`, token)
     if (res.length) {
-      setPosts([...posts, ...res.posts]);
-      setLoading(false);
-      setPageNum(nextPageNum);
+      setPosts([...posts, ...res.posts])
+      setLoading(false)
+      setPageNum(nextPageNum)
     } else {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const scrollHandle = () => {
     if (window.scrollY > 900) {
-      setShow("show");
+      setShow('show')
     } else {
-      setShow("hide");
+      setShow('hide')
     }
-  };
+  }
 
   useEffect(() => {
-    window.addEventListener("scroll", scrollHandle);
-    return () => window.removeEventListener("scroll", scrollHandle);
-  }, []);
+    window.addEventListener('scroll', scrollHandle)
+    return () => window.removeEventListener('scroll', scrollHandle)
+  }, [])
 
   return (
     <>
@@ -93,7 +93,7 @@ const Profile = () => {
             <SuggestionCard />
           </div>
 
-          {show === "show" && (
+          {show === 'show' && (
             <div
               onClick={() => window.scrollTo(0, 0)}
               className=" fixed text-2xl bottom-[10%] right-[5%] cursor-pointer"
@@ -104,7 +104,7 @@ const Profile = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Profile;
+export default Profile

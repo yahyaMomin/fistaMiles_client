@@ -1,84 +1,84 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
-import { AiFillLike, AiOutlineComment, AiOutlineLike } from "react-icons/ai";
-import { RiSendPlaneFill } from "react-icons/ri";
-import { GetData, PatchData, postData } from "../utils/api.js";
-import { useSelector } from "react-redux";
-import { ThreeDotsLoader } from "./Loader.jsx";
-import TimeAgo from "javascript-time-ago";
-import en from "javascript-time-ago/locale/en";
-import { BsThreeDots, BsThreeDotsVertical } from "react-icons/bs";
-import { deleteData } from "../utils/api.js";
+import { useState } from 'react'
+import { AiFillLike, AiOutlineComment, AiOutlineLike } from 'react-icons/ai'
+import { RiSendPlaneFill } from 'react-icons/ri'
+import { GetData, PatchData, postData } from '../utils/api.js'
+import { useSelector } from 'react-redux'
+import { ThreeDotsLoader } from '../extra/Loader.jsx'
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
+import { BsThreeDots, BsThreeDotsVertical } from 'react-icons/bs'
+import { deleteData } from '../utils/api.js'
 
 const RepliesCard = ({ item, getComments, ID, post }) => {
-  const [showReply, setShowReply] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [loading2, setLoading2] = useState(false);
-  const [showDelete, setShowDelete] = useState(false);
-  const [repliesData, setRepliesData] = useState([]);
-  const [replyId, setReplyId] = useState("");
-  const [reply, setReply] = useState("");
-  const { token } = useSelector((state) => state.auth);
-  const { user } = useSelector((state) => state.auth);
+  const [showReply, setShowReply] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [loading2, setLoading2] = useState(false)
+  const [showDelete, setShowDelete] = useState(false)
+  const [repliesData, setRepliesData] = useState([])
+  const [replyId, setReplyId] = useState('')
+  const [reply, setReply] = useState('')
+  const { token } = useSelector((state) => state.auth)
+  const { user } = useSelector((state) => state.auth)
 
-  TimeAgo.addLocale(en);
-  const timeAgo = new TimeAgo("en-US");
+  TimeAgo.addLocale(en)
+  const timeAgo = new TimeAgo('en-US')
 
   const getReplies = async (e) => {
-    if (e) setShowReply(!showReply);
+    if (e) setShowReply(!showReply)
 
-    if (e) setLoading2(true);
-    const res = await GetData(`getReplies/${item?._id}`, token);
-    setRepliesData(res.replies);
-    if (e) setLoading2(false);
-  };
+    if (e) setLoading2(true)
+    const res = await GetData(`getReplies/${item?._id}`, token)
+    setRepliesData(res.replies)
+    if (e) setLoading2(false)
+  }
 
   const deleteReply = async (replyId) => {
-    await deleteData(`deleteReply/${replyId}`, token);
-    getReplies();
-    getComments("", post._id);
-  };
+    await deleteData(`deleteReply/${replyId}`, token)
+    getReplies()
+    getComments('', post._id)
+  }
 
   const sendReply = async (e, commentId) => {
-    e.preventDefault();
-    setLoading(true);
+    e.preventDefault()
+    setLoading(true)
     const formData = {
       commentId,
       reply,
-    };
-    await postData("/createReply", formData, token);
-    setReply("");
-    setLoading(false);
-    getComments("", post._id);
-    getReplies();
-  };
+    }
+    await postData('/createReply', formData, token)
+    setReply('')
+    setLoading(false)
+    getComments('', post._id)
+    getReplies()
+  }
 
   const patchLike = async (replyId) => {
     const formData = {
       replyId,
-    };
-    await PatchData(`/likeReply`, formData, token);
-    getReplies();
-  };
+    }
+    await PatchData(`/likeReply`, formData, token)
+    getReplies()
+  }
 
   const editClick = (id) => {
-    setReplyId(id);
-    setShowDelete(!showDelete);
-  };
+    setReplyId(id)
+    setShowDelete(!showDelete)
+  }
 
   return (
     <>
       <div className="flex flex-col w-full">
         <div className="flex mb-3 items-center gap-5">
           <p>
-            <AiOutlineComment onClick={() => getReplies("btn")} className="cursor-pointer text-xl" />
+            <AiOutlineComment onClick={() => getReplies('btn')} className="cursor-pointer text-xl" />
           </p>
           {item?.replies.length ? (
-            <p onClick={() => getReplies("btn")} className="text-sm cursor-pointer text-blue-400  dark:text-blue-300">
+            <p onClick={() => getReplies('btn')} className="text-sm cursor-pointer text-blue-400  dark:text-blue-300">
               replies ({item?.replies.length})
             </p>
           ) : (
-            ""
+            ''
           )}
         </div>
         {showReply && (
@@ -120,8 +120,8 @@ const RepliesCard = ({ item, getComments, ID, post }) => {
                               <p
                                 className={`text-xs mb-1 hover:opacity-[1] cursor-pointer opacity-[.8] ${
                                   item?.replyBy?._id === ID
-                                    ? "dark:bg-perfectDarkBg bg-gray-300 px-2  rounded-full"
-                                    : ""
+                                    ? 'dark:bg-perfectDarkBg bg-gray-300 px-2  rounded-full'
+                                    : ''
                                 } `}
                               >
                                 {item?.replyBy?.userName}
@@ -172,7 +172,7 @@ const RepliesCard = ({ item, getComments, ID, post }) => {
         )}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default RepliesCard;
+export default RepliesCard

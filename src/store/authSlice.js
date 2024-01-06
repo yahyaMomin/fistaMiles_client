@@ -1,44 +1,41 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  theme: "dark",
+  theme: 'dark',
   token: null,
-  msg: null,
   user: null,
   posts: [],
-};
+}
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
     setToken: (state, action) => {
-      state.token = action.payload;
+      state.token = action.payload
     },
     setUser: (state, action) => {
-      state.user = action.payload;
+      state.user = action.payload
     },
     setLogOut: (state) => {
-      state.token = null;
-      state.user = null;
+      state.token = null
+      state.user = null
     },
-    setMsg: (state, action) => {
-      state.msg = action.payload;
-    },
+
     setTheme: (state) => {
-      state.theme = state.theme === "dark" ? "light" : "dark";
+      state.theme = state.theme === 'dark' ? 'light' : 'dark'
     },
     setPosts: (state, action) => {
-      state.posts = action.payload;
+      state.posts = action.payload
     },
     updatePosts: (state, action) => {
       state.posts = state.posts.map((item) => {
-        return item._id === action.payload._id ? { ...item, ...action.payload } : item;
-      });
+        return item._id === action.payload._id ? { ...item, ...action.payload } : item
+      })
     },
   },
-});
+})
 
-export const { setToken, setUser, setLogOut, setMsg, setTheme, setPosts, updatePosts } = authSlice.actions;
+export const { setToken, setUser, setLogOut, setMsg, setTheme, setPosts, updatePosts } = authSlice.actions
 
-export default authSlice.reducer;
+export default authSlice.reducer

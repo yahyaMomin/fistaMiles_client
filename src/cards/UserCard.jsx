@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import BaseLine from './BaseLine'
+import BaseLine from '../extra/BaseLine'
 import { FaLocationDot, FaXTwitter, FaLinkedin, FaBagShopping } from 'react-icons/fa6'
 import { BiSolidEdit } from 'react-icons/bi'
 import { BsInstagram } from 'react-icons/bs'

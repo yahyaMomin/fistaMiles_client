@@ -1,5 +1,5 @@
-import { AiFillHeart } from "react-icons/ai";
-import BaseLine from "./BaseLine";
+import { AiFillHeart } from 'react-icons/ai'
+import BaseLine from '../extra/BaseLine'
 
 const PostImage = ({ patchLike, data, showAni, id }) => {
   return (
@@ -20,7 +20,7 @@ const PostImage = ({ patchLike, data, showAni, id }) => {
       </div>
       <BaseLine />
     </div>
-  );
-};
+  )
+}
 
-export default PostImage;
+export default PostImage

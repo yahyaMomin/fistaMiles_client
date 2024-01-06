@@ -1,10 +1,10 @@
 import { AiFillFileImage, AiOutlinePaperClip } from 'react-icons/ai'
-import BaseLine from './BaseLine'
+import BaseLine from '../extra/BaseLine'
 import { useState } from 'react'
 import { FaVideo, FaXmark } from 'react-icons/fa6'
 import { postData } from '../utils/api'
 import { useSelector } from 'react-redux'
-import { ThreeDotsLoader } from './Loader'
+import { ThreeDotsLoader } from '../extra/Loader'
 
 import storage from '../utils/fireBaseConfig'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
