@@ -5,7 +5,7 @@ import { PatchData } from '../utils/api'
 import { useDispatch, useSelector } from 'react-redux'
 import { updatePosts } from '../store/authSlice'
 import PostDetail from '../components/PostDetail'
-import PostImage from '../components/postImage'
+import PostImage from '../components/PostImage'
 import LikeAndCommentIcon from '../components/LikeAndCommentIcon'
 
 const PostsCard = ({ getFeedPost, data }) => {

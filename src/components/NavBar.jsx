@@ -28,7 +28,10 @@ const NavBar = () => {
   return (
     <div className="navbar overflow-visible  w-full z-30">
       <div className="flex  w-full  dark:bg-darkGray border dark:border-none gap-2 bg-[#fafafa] py-2 mt-2 rounded-sm px-1   md:px-3  justify-between items-center ">
-        <h1 onClick={() => navigate('/')} className=" cursor-pointer  hidden md:block  text-base md:text-xl font-mono">
+        <h1
+          onClick={() => navigate('/home')}
+          className=" cursor-pointer  hidden md:block  text-base md:text-xl font-mono"
+        >
           Fista<span className="text-yellow-400 dark:text-main ">Miles</span>
         </h1>
         <div className="inputs relative flex justify-center  md:w-[50%] items-center flex-row w-full h-[40px] text-center">
@@ -37,7 +40,7 @@ const NavBar = () => {
             onChange={(e) => handleChange(e)}
             value={inputVal}
             placeholder="Search Here..."
-            className=" px-2 h-full md:block dark:bg-darkGray dark:border-gray-600 dark:text-white border-b-2 bg-white w-full  w-full"
+            className=" px-2 h-full md:block dark:bg-darkGray dark:border-gray-600 dark:text-white border-b-2 bg-white w-full"
           />
           <button className="text-2xl  h-full absolute top-[5%] right-[1%]   justify-center items-center opacity-[.5] hover:opacity-[1]">
             <AiOutlineSearch />

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { BsFillArrowUpCircleFill } from 'react-icons/bs'
+import { MdOutlineKeyboardDoubleArrowUp } from 'react-icons/md'
 
 import { GetData } from '../utils/api'
 import { setPosts } from '../store/authSlice'
@@ -102,7 +102,7 @@ const Home = () => {
               onClick={() => window.scrollTo(0, 0)}
               className=" fixed text-2xl bottom-[10%] right-[5%] cursor-pointer"
             >
-              <BsFillArrowUpCircleFill />
+              <MdOutlineKeyboardDoubleArrowUp />
             </div>
           )}
         </div>
