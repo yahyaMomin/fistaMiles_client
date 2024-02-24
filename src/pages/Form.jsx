@@ -82,14 +82,26 @@ const Form = () => {
     reset()
   }, [page])
 
+  const guest = {
+    email: 'guest@gmail.com',
+    password: '121212',
+  }
+
   return (
     <ContentWrapper>
       <Card>
         {!loading ? (
           <>
-            <h1 className="text-center mt-5 mb-10 font-semibold dark:text-main ">
-              {page === 'login' ? 'LOGIN TO YOUR ACCOUNT' : 'CREATE AN ACCOUNT'}
-            </h1>
+            <div className="text-center mt-5 mb-10 ">
+              {page === 'login' && (
+                <button onClick={() => loginForm(guest)} className="px-5 py-1 bg-lightGray rounded-sm mb-2">
+                  Use as a guest
+                </button>
+              )}
+              <h1 className="dark:text-main font-semibold ">
+                {page === 'login' ? 'LOGIN TO YOUR ACCOUNT' : 'CREATE AN ACCOUNT'}
+              </h1>
+            </div>
             <form className="w-full" onSubmit={handleSubmit(formSubmit)}>
               {page === 'register' && (
                 <>
@@ -164,24 +176,27 @@ const Form = () => {
                 value="Register"
                 className="inputs bg-main text-black w-full rounded-sm py-2 px-2 mt-5 mb-4 cursor-pointer"
               >
-                Register
+                {page === 'register' ? 'register' : 'login'}
               </button>
             </form>
-            {page === 'register' ? (
-              <p className="text-center">
-                Have an Account?
-                <button onClick={() => setPage('login')} className="dark:text-main text-black  ml-3">
-                  Login
-                </button>
-              </p>
-            ) : (
-              <p className="text-center">
-                Don&apos;t have an Account?
-                <button onClick={() => setPage('register')} className="dark:text-main text-black  ml-3">
-                  register
-                </button>
-              </p>
-            )}
+            <p className="text-center">
+              <button
+                onClick={() => setPage(page === 'login' ? 'register' : 'login')}
+                className="dark:text-main text-black  ml-3"
+              >
+                {page === 'login' ? (
+                  <>
+                    <span className="text-white">dont&apos;t have an Account </span>
+                    register
+                  </>
+                ) : (
+                  <>
+                    <span className="text-white">have an Account </span>
+                    login
+                  </>
+                )}
+              </button>
+            </p>
           </>
         ) : (
           <LoaderSpinner />
